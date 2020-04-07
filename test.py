@@ -1,5 +1,5 @@
 
-def variants(*args, **kwargs) -> tuple:
+def pytest_variants(*args, **kwargs) -> tuple:
     if args:  # unnamed values will be provided as 'variant'
         kwargs.update(dict(variant=args))
 
@@ -8,7 +8,7 @@ def variants(*args, **kwargs) -> tuple:
         if len(variants_values) > 1 else variants_values[0]
 
 
-def parametrize(*args, **kwargs):
+def pytest_parametrize(*args, **kwargs):
     from pytest import mark
     return mark.parametrize(
-        *variants(*args, **kwargs))
+        *pytest_variants(*args, **kwargs))
