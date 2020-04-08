@@ -12,3 +12,6 @@ venv/
 
 # mkdocs documentation
 /site
+
+# setuptools
+*egg-info/

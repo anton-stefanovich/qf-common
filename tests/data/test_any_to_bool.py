@@ -1,4 +1,4 @@
-from test import pytest_parametrize
+from src.test import pytest_parametrize
 from enum import Enum
 
 
@@ -10,7 +10,7 @@ class TestInput (Enum):
 
 def __check_bool_conversion(variant: any, is_positive_test: bool, reference_value: bool = None):
     from argparse import ArgumentTypeError
-    from data import any_to_bool
+    from src.data import any_to_bool
 
     try:
         result = any_to_bool(variant)
