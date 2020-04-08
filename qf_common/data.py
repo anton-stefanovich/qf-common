@@ -7,30 +7,33 @@ __BOOL_MAPPER = {
 }
 
 
-def any_to_bool(value: (bool, str)) -> bool:
-    if isinstance(value, bool):
-        return value
+def any_to_bool(value: (bool, int, float, str), default: bool = None) -> bool:
+    if isinstance(value, (bool, int, float)):
+        return bool(value)
 
     for key, aliases in __BOOL_MAPPER.items():
         if str(value).lower() in aliases:
             return key
 
     else:
-        from argparse import ArgumentTypeError
-        raise ArgumentTypeError(f'Can\'t convert `{value}` to boolean value')
+        if default is None:
+            from argparse import ArgumentTypeError
+            raise ArgumentTypeError(f'Can\'t convert `{value}` to boolean value')
+
+    return default
 
 
-def any_to_int(index: any) -> int:
-    if isinstance(index, IntEnum):
-        index = index.value
+def any_to_int(value: any) -> int:
+    if isinstance(value, IntEnum):
+        value = value.value
 
-    elif index is None:
-        index = 0
+    elif value is None:
+        value = 0
 
-    assert isinstance(index, int), \
+    assert isinstance(value, int), \
         'Wrong index type provided'
 
-    return index
+    return value
 
 
 def iterable(obj: any, save_none_value: bool = False) -> tuple:

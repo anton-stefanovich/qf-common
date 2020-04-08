@@ -1,4 +1,4 @@
-from src.test import pytest_parametrize
+from qf_common.test import pytest_parametrize
 from enum import Enum
 
 
@@ -8,32 +8,52 @@ class TestInput (Enum):
     STRING_FALSE = ['No', 'False', 'N', 'Off', '0', 'Disable', 'Disabled']
 
 
-def __check_bool_conversion(variant: any, is_positive_test: bool, reference_value: bool = None):
+def __check_bool_conversion(*args, reference_value: bool = None, **kwargs):
+
     from argparse import ArgumentTypeError
-    from src.data import any_to_bool
+    from qf_common.data import any_to_bool
 
     try:
-        result = any_to_bool(variant)
+        result = any_to_bool(*args, **kwargs)
 
     except ArgumentTypeError:
-        assert not is_positive_test
+        assert reference_value is None
 
     else:
-        assert is_positive_test and \
-               isinstance(result, bool) and \
+        assert isinstance(result, bool) and \
                result == reference_value
 
 
 @pytest_parametrize(*TestInput.STRING_TRUE.value)
-def test_true_string_to_bool(variant):
-    __check_bool_conversion(variant, is_positive_test=True, reference_value=True)
+def test__true_string_to_bool__no_default_value(variant):
+    __check_bool_conversion(variant, reference_value=True)
+
+
+@pytest_parametrize(*TestInput.STRING_TRUE.value)
+def test__true_string_to_bool__false_as_default_value(variant):
+    __check_bool_conversion(variant, default=False, reference_value=True)
 
 
 @pytest_parametrize(*TestInput.STRING_FALSE.value)
-def test_false_string_to_bool(variant):
-    __check_bool_conversion(variant, is_positive_test=True, reference_value=False)
+def test__false_string_to_bool__no_default_value(variant):
+    __check_bool_conversion(variant, reference_value=False)
+
+
+@pytest_parametrize(*TestInput.STRING_FALSE.value)
+def test__false_string_to_bool__true_as_default_value(variant):
+    __check_bool_conversion(variant, default=True, reference_value=False)
 
 
 @pytest_parametrize(*TestInput.STRING_JUNK.value)
-def test_junk_string_to_bool(variant):
-    __check_bool_conversion(variant, is_positive_test=False)
+def test__junk_string_to_bool__no_default_value(variant):
+    __check_bool_conversion(variant)
+
+
+@pytest_parametrize(*TestInput.STRING_JUNK.value)
+def test__junk_string_to_bool__true_as_default_value(variant):
+    __check_bool_conversion(variant, default=True, reference_value=True)
+
+
+@pytest_parametrize(*TestInput.STRING_JUNK.value)
+def test__junk_string_to_bool__false_as_default_value(variant):
+    __check_bool_conversion(variant, default=False, reference_value=False)
