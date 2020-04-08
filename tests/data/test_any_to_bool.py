@@ -25,23 +25,43 @@ def __check_bool_conversion(*args, reference_value: bool = None, **kwargs):
 
 
 @pytest_parametrize(*TestInput.STRING_TRUE.value)
-def test__true_string_to_bool__no_default_value(variant):
+def test__raw_true_string_to_bool__no_default_value(variant):
     __check_bool_conversion(variant, reference_value=True)
 
 
 @pytest_parametrize(*TestInput.STRING_TRUE.value)
-def test__true_string_to_bool__false_as_default_value(variant):
+def test__raw_true_string_to_bool__false_as_default_value(variant):
     __check_bool_conversion(variant, default=False, reference_value=True)
 
 
+@pytest_parametrize(*(string.upper() for string in TestInput.STRING_TRUE.value))
+def test__uppercase_true_string_to_bool__no_default_value(variant):
+    __check_bool_conversion(variant, reference_value=True)
+
+
+@pytest_parametrize(*(string.lower() for string in TestInput.STRING_TRUE.value))
+def test__lowercase_true_string_to_bool__no_default_value(variant):
+    __check_bool_conversion(variant, reference_value=True)
+
+
 @pytest_parametrize(*TestInput.STRING_FALSE.value)
-def test__false_string_to_bool__no_default_value(variant):
+def test__raw_false_string_to_bool__no_default_value(variant):
     __check_bool_conversion(variant, reference_value=False)
 
 
 @pytest_parametrize(*TestInput.STRING_FALSE.value)
-def test__false_string_to_bool__true_as_default_value(variant):
+def test__raw_false_string_to_bool__true_as_default_value(variant):
     __check_bool_conversion(variant, default=True, reference_value=False)
+
+
+@pytest_parametrize(*(string.upper() for string in TestInput.STRING_FALSE.value))
+def test__uppercase_false_string_to_bool__no_default_value(variant):
+    __check_bool_conversion(variant, reference_value=False)
+
+
+@pytest_parametrize(*(string.lower() for string in TestInput.STRING_FALSE.value))
+def test__lowercase_false_string_to_bool__no_default_value(variant):
+    __check_bool_conversion(variant, reference_value=False)
 
 
 @pytest_parametrize(*TestInput.STRING_JUNK.value)
