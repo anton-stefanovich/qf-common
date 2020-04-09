@@ -19,6 +19,9 @@ strategy:
     Python37:
       python.version: '3.7'
 
+variables:
+  PYTHONPATH: $(Build.Repository.LocalPath) 
+
 steps:
 - task: UsePythonVersion@0
   inputs:
