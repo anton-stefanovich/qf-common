@@ -18,7 +18,7 @@ def any_to_bool(value: (bool, int, float, str), default: bool = None) -> bool:
     else:
         if default is None:
             from argparse import ArgumentTypeError
-            raise ArgumentTypeError(f'Can\'t convert `{value}` to boolean value')
+            raise ArgumentTypeError('Can\'t convert \'%s\' to boolean value' % value)   
 
     return default
 
