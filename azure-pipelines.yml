@@ -35,7 +35,7 @@ steps:
 
 - script: |
     pip install -U pytest pytest-azurepipelines
-    pytest --junitxml=junit/test-results.xml
+    pytest --rootdir=tests --junitxml=junit/test-results.xml
   displayName: 'pytest'
 
 - task: PublishTestResults@2
