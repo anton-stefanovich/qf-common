@@ -1,1 +1,1 @@
-# no any requirements for this project
+requests
