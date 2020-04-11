@@ -4,8 +4,8 @@ def _get_next_version(package_name):
     from re import findall, escape
 
     __VERSION_DELIMITER__ = '.'  # example: 0.3.7
-    __VERSION_PATTERN__ = f'[\\d{__VERSION_DELIMITER__}]+\\d'
-    target_url = f'https://pypi.org/project/{package_name}/'
+    __VERSION_PATTERN__ = '[\\d%s]+\\d' % __VERSION_DELIMITER__
+    target_url = 'https://pypi.org/project/%s/' % package_name
 
     page_source = get(target_url).text
     name_version = findall(
