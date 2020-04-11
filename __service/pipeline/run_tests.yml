@@ -6,40 +6,62 @@
 trigger:
 - master
 
-pool:
-  vmImage: 'ubuntu-latest'
-strategy:
-  matrix:
-    # Python27:
-    #   python.version: '2.7'
-    Python35:
-      python.version: '3.5'
-    Python36:
-      python.version: '3.6'
-    Python37:
-      python.version: '3.7'
-
 variables:
+  # let's define new path to python include list
   PYTHONPATH: $(Build.Repository.LocalPath)
 
-steps:
-- task: UsePythonVersion@0
-  inputs:
-    versionSpec: '$(python.version)'
-  displayName: 'Use Python $(python.version)'
+jobs:
+- job: run_package_tests
 
-- script: |
-    python -m pip install --upgrade pip
-    pip install -r requirements.txt
-  displayName: 'Install dependencies'
+  displayName: Run the package tests with different python versions
 
-- script: |
-    pip install -U pytest pytest-azurepipelines
-    pytest unit_tests --junitxml='junit/test-results.xml'
-  displayName: 'pytest'
+  pool:
+    vmImage: 'ubuntu-latest'
 
-- task: PublishTestResults@2
-  condition: succeededOrFailed()
-  inputs:
-    testResultsFiles: '**/test-*.xml'
-    testRunTitle: 'Publish test results for Python $(python.version)'
+  strategy:
+    matrix:
+      # Python27:
+      #   python.version: '2.7'
+      Python35:
+        python.version: '3.5'
+      Python36:
+        python.version: '3.6'
+      Python37:
+        python.version: '3.7'
+
+  steps:
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '$(python.version)'
+    displayName: 'Use Python $(python.version)'
+
+  - script: |
+      python -m pip install --upgrade pip
+      pip install -r requirements.txt
+    displayName: 'Install dependencies'
+
+  - script: |
+      pip install -U pytest pytest-azurepipelines
+      pytest unit_tests --junitxml='junit/test-results.xml'
+    displayName: 'pytest'
+
+  - task: PublishTestResults@2
+    condition: succeededOrFailed()
+    inputs:
+      testResultsFiles: '**/test-*.xml'
+      testRunTitle: 'Publish test results for Python $(python.version)'
+
+- job: create_package_image_with_next_version
+
+  displayName: Create the package image with the next version number
+  dependsOn: run_package_tests
+
+  steps:
+  - script: |
+      python3 __service/create_package.py
+    displayName: 'running the creation script'
+
+  - task: PublishPipelineArtifact@1
+    inputs:
+      targetPath: $(System.DefaultWorkingDirectory)/dist
+      artifactName: package_image
