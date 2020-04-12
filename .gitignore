@@ -15,7 +15,8 @@ venv/
 /site
 
 # setuptools
-*egg-info/
+*.egg-info/
+.eggs/
 build/
 dist/
 

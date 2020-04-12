@@ -36,6 +36,8 @@ def create(**kwargs) -> list:
     kwargs.setdefault('author', 'Anton Stefanovich')
     kwargs.setdefault('author_email', 'anton.stefanovich@gmail.com')
     kwargs.setdefault('script_args', ['sdist', 'bdist_wheel'])
+    kwargs.setdefault('setup_requires', ['pytest-runner'])
+    kwargs.setdefault('tests_require', ['pytest'])
     kwargs.setdefault('zip_safe', False)
     kwargs.setdefault('license', 'MIT')
 
