@@ -13,7 +13,7 @@ variables:
 jobs:
 - job: run_package_tests
 
-  displayName: Run the package tests with different python versions
+  displayName: 'Run the package tests:'
 
   pool:
     vmImage: 'ubuntu-latest'
@@ -53,17 +53,16 @@ jobs:
 
 - job: create_package_image_with_next_version
 
-  displayName: Create the package image with the next version number
+  displayName: 'Create the package image'
   dependsOn: run_package_tests
 
   steps:
   - script: |
-      python3 -m pip install --upgrade pip
-      python3 -m pip install -r requirements.txt
+      python3 -m pip install --upgrade pip qf-package
     displayName: 'Install dependencies'
 
   - script: |
-      python3 __service/create_package.py
+      python3 create_package.py
     displayName: 'running the creation script'
 
   - task: PublishPipelineArtifact@1
